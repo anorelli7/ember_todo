@@ -25,11 +25,21 @@
 
             <section id="main">
               <ul id="todo-list">
-                {{#each todo in model}}
-                  <li {{bind-attr class="todo.isCompleted:completed"}}>
-                    <input type="checkbox" class="toggle">
-                    <label>{{todo.title}}</label><button class="destroy"></button>
+                {{#each todo in model itemController="todo"}}
+                  <li {{bind-attr class="todo.isCompleted:completed todo.isEditing:editing"}}>
+
+                    {{# if todo.isEditing }}
+                      {{edit-todo class="edit" value=todo.title focus-out="acceptChanges" insert-newline="acceptChanges"}}
+
+                        {{else}}
+
+                          {{input type="checkbox" checked=todo.isCompleted class="toggle"}}
+                          <label {{action "editTodo" on="doubleClick"}}>{{todo.title}}</label><button {{action "removeTodo"}}class="destroy"></button>
+
+                    {{/if}}
                   </li>
+
+                  
                 {{/each}}
 
               </ul>
@@ -39,7 +49,7 @@
 
             <footer id="footer">
               <span id="todo-count">
-                <strong>2</strong> todos left
+                <strong>{{remaining}}</strong>{{inflection}} left
               </span>
               <ul id="filters">
                 <li>
@@ -63,13 +73,15 @@
             <p>Double-click to edit a todo</p>
           </footer>
     </script>
-  <script src="js/libs/jquery-1.10.2.js"></script>
-  <script src="js/libs/handlebars-v2.0.0.js"></script>
-  <script src="js/libs/ember-1.9.1.js"></script>
+ <script src="http://emberjs.com.s3.amazonaws.com/getting-started/jquery.min.js"></script>
+  <script src="http://emberjs.com.s3.amazonaws.com/getting-started/handlebars.js"></script>
+  <script src="http://emberjs.com.s3.amazonaws.com/getting-started/ember.js"></script>
   <script src="http://emberjs.com.s3.amazonaws.com/getting-started/ember-data.js"></script>
 
   <script src="js/app.js"></script>
   <script src="js/controllers/todos.controller.js"></script>
+  <script src="js/controllers/todo.controller.js"></script>
+  <script src="js/views/edit_todo_view.js"></script>
 
   <!-- to activate the test runner, add the "?test" query string parameter -->
   <script src="tests/runner.js"></script>
